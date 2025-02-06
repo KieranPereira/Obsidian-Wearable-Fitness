@@ -79,7 +79,7 @@ def update_data():
     except (UnicodeDecodeError, serial.SerialException) as e:
         print("Error:", e)
     
-    root.after(50, update_data)  # Schedule next update
+    root.after(1, update_data)  # Schedule next update
 
 # Start Updating GUI
 update_data()

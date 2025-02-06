@@ -1,21 +1,22 @@
 #include "mpu6050_controller.hpp"
 
-// Constructor: just initializes the mpu object.
-// Actual sensor and I2C initialization is done in begin().
+// Constructor: do not initialize the sensor here.
 MPU6050Controller::MPU6050Controller() : mpu() {
-    // Empty constructor body; initialization happens in begin().
+    // Constructor left intentionally empty.
 }
 
-// Initializes I2C, the sensor, and other peripherals.
+// New begin() method to initialize the sensor and I2C.
 bool MPU6050Controller::begin() {
-    Wire.begin(I2C_SDA, I2C_SCL); // Initialize I2C with defined pins
+    // Initialize I2C with the defined SDA and SCL pins.
+    Wire.begin(I2C_SDA, I2C_SCL);
 
-    // Initialize the MPU6050 sensor with the I2C address 0x68.
+    // Attempt to initialize the MPU6050 sensor at I2C address 0x68.
     if (!mpu.begin(0x68)) {
         Serial.println("Failed to find MPU6050 sensor!");
         return false;
     }
 
+    // Set up the LED pin and timing.
     pinMode(LED_PIN, OUTPUT);
     ledState = false;
     lastUpdate = millis();
@@ -31,11 +32,11 @@ void MPU6050Controller::update() {
     if (currentMillis - lastUpdate >= updateInterval) {
         lastUpdate = currentMillis;
 
-        // Obtain sensor events for acceleration, gyroscope, and temperature.
+        // Retrieve sensor events for acceleration, gyroscope, and temperature.
         sensors_event_t a, g, tempEvent;
         mpu.getEvent(&a, &g, &tempEvent);
 
-        // Store the sensor values.
+        // Save the sensor readings.
         accelX = a.acceleration.x;
         accelY = a.acceleration.y;
         accelZ = a.acceleration.z;
@@ -46,10 +47,10 @@ void MPU6050Controller::update() {
 
         temp = tempEvent.temperature;
 
-        // Calculate the angle (for example, pitch or roll) based on acceleration.
+        // Calculate an angle (for example, a tilt angle) from the acceleration values.
         angle = calculateAngle(accelX, accelY, accelZ);
 
-        // Prepare a JSON document to output the data.
+        // Create a JSON document with an appropriate capacity.
         StaticJsonDocument<256> doc;
         doc["accel_x"] = accelX;
         doc["accel_y"] = accelY;
@@ -61,7 +62,7 @@ void MPU6050Controller::update() {
         doc["angle"]   = angle;
         doc["status"]  = (angle >= 85 && angle <= 95) ? "Done" : "In Progress";
 
-        // Serialize JSON to Serial.
+        // Serialize and send the JSON over Serial.
         serializeJson(doc, Serial);
         Serial.println();
     }
@@ -75,6 +76,6 @@ void MPU6050Controller::update() {
 }
 
 float MPU6050Controller::calculateAngle(float ax, float ay, float az) {
-    // Calculate angle using the arctangent of az over the horizontal magnitude.
+    // Calculate an angle (in degrees) from the acceleration data.
     return atan2(az, sqrt(sq(ax) + sq(ay))) * (180.0 / PI);
 }
