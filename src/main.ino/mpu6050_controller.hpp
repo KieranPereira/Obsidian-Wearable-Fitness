@@ -43,7 +43,7 @@ private:
     bool ledState;
     
     // Intervals in milliseconds.
-    const int updateInterval = 500;
+    const int updateInterval = 10;
     const int blinkInterval  = 1000;
 
     // Calculates an angle based on acceleration values.

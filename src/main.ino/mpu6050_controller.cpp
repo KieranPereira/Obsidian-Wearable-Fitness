@@ -1,4 +1,8 @@
 #include "mpu6050_controller.hpp"
+#include <BluetoothSerial.h>
+extern BluetoothSerial serialBT;  // Reference the Bluetooth serial instance
+
+
 
 // Constructor: do not initialize the sensor here.
 MPU6050Controller::MPU6050Controller() : mpu() {
@@ -40,17 +44,15 @@ void MPU6050Controller::update() {
         accelX = a.acceleration.x;
         accelY = a.acceleration.y;
         accelZ = a.acceleration.z;
+        gyroX  = g.gyro.x;
+        gyroY  = g.gyro.y;
+        gyroZ  = g.gyro.z;
+        temp   = tempEvent.temperature;
 
-        gyroX = g.gyro.x;
-        gyroY = g.gyro.y;
-        gyroZ = g.gyro.z;
-
-        temp = tempEvent.temperature;
-
-        // Calculate an angle (for example, a tilt angle) from the acceleration values.
+        // Calculate an angle from the acceleration values.
         angle = calculateAngle(accelX, accelY, accelZ);
 
-        // Create a JSON document with an appropriate capacity.
+        // Create a JSON document.
         StaticJsonDocument<256> doc;
         doc["accel_x"] = accelX;
         doc["accel_y"] = accelY;
@@ -62,18 +64,23 @@ void MPU6050Controller::update() {
         doc["angle"]   = angle;
         doc["status"]  = (angle >= 85 && angle <= 95) ? "Done" : "In Progress";
 
-        // Serialize and send the JSON over Serial.
+        // Transmit the JSON data over Bluetooth.
+        serializeJson(doc, serialBT);
+        serialBT.println();
+
+        // Optionally, also output to the USB Serial Monitor.
         serializeJson(doc, Serial);
         Serial.println();
     }
 
-    // Blink the LED at the defined interval.
+    // Blink the LED as before.
     if (currentMillis - lastBlink >= blinkInterval) {
         lastBlink = currentMillis;
         ledState = !ledState;
         digitalWrite(LED_PIN, ledState);
     }
 }
+
 
 float MPU6050Controller::calculateAngle(float ax, float ay, float az) {
     // Calculate an angle (in degrees) from the acceleration data.
