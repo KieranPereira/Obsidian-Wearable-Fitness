@@ -7,7 +7,7 @@ import math
 # ========================
 # Serial Port Configuration
 # ========================
-SERIAL_PORT = 'COM8'
+SERIAL_PORT = 'COM11'
 BAUD_RATE = 115200
 
 # ========================

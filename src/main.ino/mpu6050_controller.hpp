@@ -1,4 +1,23 @@
-// mpu6050_controller.h
+/**
+ * @file mpu6050_controller.hpp
+ * @brief Header file for the MPU6050Controller class.
+ *
+ * This file defines the MPU6050Controller class, which encapsulates the initialization,
+ * data acquisition, and basic processing of sensor data from an MPU6050 inertial measurement unit (IMU).
+ * The class handles reading acceleration, gyroscopic, and temperature data, as well as calculating an
+ * orientation angle based on acceleration values. It also includes optional LED blinking functionality
+ * for status indication.
+ *
+ * Dependencies:
+ * - Arduino.h
+ * - Wire.h
+ * - Adafruit_MPU6050.h
+ * - Adafruit_Sensor.h
+ * - ArduinoJson.h
+ *
+ * @note Designed for use on an ESP32, with configurable I2C pins.
+ */
+
 #ifndef MPU6050_CONTROLLER_H
 #define MPU6050_CONTROLLER_H
 
@@ -13,7 +32,7 @@
 #define I2C_SCL 22
 
 // Define the LED Pin (optional)
-#define LED_PIN 2
+#define LED_PIN 13
 
 class MPU6050Controller {
 public:

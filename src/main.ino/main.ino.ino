@@ -1,3 +1,19 @@
+/**
+ * @file main.ino
+ * @brief Main application for controlling the MPU6050 sensor and communicating over Bluetooth.
+ *
+ * This application is designed for the ESP32 platform. It performs the following tasks:
+ * - Initializes a Bluetooth serial connection with the device name "Esp32-BT".
+ * - Sets up the MPU6050 sensor using an instance of MPU6050Controller.
+ * - Transmits sensor readings (acceleration, gyroscope, temperature, and a calculated angle)
+ *   as JSON data over both Bluetooth and USB Serial.
+ * - Listens for incoming Bluetooth commands to control an LED:
+ *     - '1' turns the LED on.
+ *     - '0' turns the LED off.
+ *
+ * @note If the sensor initialization fails, the application halts in an infinite loop.
+ */
+
 #include <BluetoothSerial.h>
 #include "mpu6050_controller.hpp"
 

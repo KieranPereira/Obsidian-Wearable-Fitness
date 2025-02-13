@@ -1,3 +1,18 @@
+/**
+ * @file mpu6050_controller.cpp
+ * @brief Implementation of the MPU6050Controller class.
+ *
+ * This file implements the methods of the MPU6050Controller class, which is responsible for:
+ * - Initializing the MPU6050 sensor over I2C using defined SDA and SCL pins.
+ * - Reading sensor data (acceleration, gyroscope, and temperature) from the MPU6050.
+ * - Calculating an orientation angle based on acceleration values.
+ * - Packaging the sensor data into a JSON document and transmitting it over Bluetooth,
+ *   as well as outputting it to the USB Serial Monitor.
+ * - Blinking an LED at regular intervals to indicate active sensor updates.
+ *
+ * @note The Bluetooth serial instance 'serialBT' must be defined externally.
+ */
+
 #include "mpu6050_controller.hpp"
 #include <BluetoothSerial.h>
 extern BluetoothSerial serialBT;  // Reference the Bluetooth serial instance
