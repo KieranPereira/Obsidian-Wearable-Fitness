@@ -10,8 +10,8 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QTabWidget
 
 # Import the 2D and 3D classes from separate files
 from lateralraise2d import LateralRaise2DTab
-from KP_biometric_visualizer_3d import BiometricVisualizer3DTab
 
+from KP_biometric_visualizer_3d import BiometricVisualizer3DTab
 
 # ===================== GLOBALS / CONFIG =====================
 data_lock = threading.Lock()
