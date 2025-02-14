@@ -64,11 +64,17 @@ void MPU6050Controller::update() {
         gyroZ  = g.gyro.z;
         temp   = tempEvent.temperature;
 
-        // Calculate an angle from the acceleration values.
-        angle = calculateAngle(accelX, accelY, accelZ);
+        // Calculate roll, pitch, and yaw angles from the acceleration values.
+        // (You may choose to rename these variables or make them class members.)
+        float pitch_angle = calculateAngle(accelX, accelY, accelZ);
+        float roll_angle  = atan2(accelY, accelZ) * (180.0 / PI);
+        float yaw_angle   = 0;  // Placeholder: Implement sensor fusion for a proper yaw.
 
         // Create a JSON document.
         StaticJsonDocument<256> doc;
+        doc["roll"]  = roll_angle;
+        doc["pitch"] = pitch_angle;
+        doc["yaw"]   = yaw_angle;
         doc["accel_x"] = accelX;
         doc["accel_y"] = accelY;
         doc["accel_z"] = accelZ;
@@ -76,8 +82,7 @@ void MPU6050Controller::update() {
         doc["gyro_y"]  = gyroY;
         doc["gyro_z"]  = gyroZ;
         doc["temp"]    = temp;
-        doc["angle"]   = angle;
-        doc["status"]  = (angle >= 85 && angle <= 95) ? "Done" : "In Progress";
+        doc["status"]  = (pitch_angle >= 85 && pitch_angle <= 95) ? "Done" : "In Progress";
 
         // Transmit the JSON data over Bluetooth.
         serializeJson(doc, serialBT);
@@ -95,7 +100,6 @@ void MPU6050Controller::update() {
         digitalWrite(LED_PIN, ledState);
     }
 }
-
 
 float MPU6050Controller::calculateAngle(float ax, float ay, float az) {
     // Calculate an angle (in degrees) from the acceleration data.
