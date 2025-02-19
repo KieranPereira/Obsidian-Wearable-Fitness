@@ -3,7 +3,7 @@
  * @brief Main application for controlling the MPU6050 sensor and communicating over Bluetooth.
  *
  * This application is designed for the ESP32 platform. It performs the following tasks:
- * - Initializes a Bluetooth serial connection with the device name "Esp32-BT".
+ * - Initializes a Bluetooth serial connection with the device name "Feather-BT".
  * - Sets up the MPU6050 sensor using an instance of MPU6050Controller.
  * - Transmits sensor readings (acceleration, gyroscope, temperature, and a calculated angle)
  *   as JSON data over both Bluetooth and USB Serial.
@@ -30,8 +30,8 @@ void setup() {
   // Start USB Serial for debugging.
   Serial.begin(115200);
 
-  // Initialize Bluetooth with the device name "Esp32-BT".
-  serialBT.begin("Esp32-BT");
+  // Initialize Bluetooth with the device name "Feather-BT".
+  serialBT.begin("WROOM-ESP-BT");
   
   // Initialize the MPU6050 sensor.
   if (!controller.begin()) {
@@ -56,7 +56,7 @@ void loop() {
     }
   }
   
-  // Update the sensor readings and output the JSON data over USB Serial.
+  // Update the sensor readings and output the JSON data over USB Serial and Bluetooth.
   controller.update();
 
   delay(2);
